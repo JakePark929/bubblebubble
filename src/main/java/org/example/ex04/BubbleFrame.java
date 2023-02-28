@@ -1,10 +1,9 @@
-package org.example.ex03;
+package org.example.ex04;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 // 윈도우 창이 되었음
 // 2. 윈도우 창은 내부에 패널을 하나 가지고 있다.
@@ -37,19 +36,39 @@ public class BubbleFrame extends JFrame {
 
     private void initListener() {
         addKeyListener(new KeyAdapter() {
+
+            // 키보드 클릭 이벤트
             @Override
             public void keyPressed(KeyEvent e) {
-                System.out.println(e.getKeyCode());
+//                System.out.println(e.getKeyCode());
 
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_LEFT:
-                        player.left();
+                        if (!player.isLeft()) {
+                            player.left();
+                        }
                         break;
                     case KeyEvent.VK_RIGHT:
-                        player.right();
+                        if (!player.isRight()) {
+                            player.right();
+                        }
                         break;
                     case KeyEvent.VK_UP:
-                        player.up();
+                        if (!player.isUp() && !player.isDown()) {
+                            player.up();
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                        player.setLeft(false);
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        player.setRight(false);
                         break;
                 }
             }

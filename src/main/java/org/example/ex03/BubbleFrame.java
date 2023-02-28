@@ -1,8 +1,10 @@
-package org.example.ex02;
+package org.example.ex03;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 // 윈도우 창이 되었음
 // 2. 윈도우 창은 내부에 패널을 하나 가지고 있다.
@@ -13,6 +15,7 @@ public class BubbleFrame extends JFrame {
     public BubbleFrame() throws HeadlessException {
         initObject();
         initSetting();
+        initListener();
         setVisible(true); // 그림을 그려라
     }
 
@@ -22,10 +25,6 @@ public class BubbleFrame extends JFrame {
 
         player = new Player();
         add(player);
-//        backgroundMap.setSize(100, 100);
-//        backgroundMap.setLocation(300, 300);
-//        backgroundMap.setSize(1000, 600);
-//        add(backgroundMap); // JFrame 에 JLabel 이 그려진다.
     }
 
     private void initSetting() {
@@ -34,6 +33,27 @@ public class BubbleFrame extends JFrame {
 
         setLocationRelativeTo(null); // JFrame 디스플레이 가운데 배치하기
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // x 버튼으로 창을 끌 때 JVM 같이 종료하기
+    }
+
+    private void initListener() {
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                System.out.println(e.getKeyCode());
+
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                        player.left();
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        player.right();
+                        break;
+                    case KeyEvent.VK_UP:
+                        player.up();
+                        break;
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package org.example.ex03;
+package org.example.ex04;
 
 public interface Moveable {
     public abstract void left();
