@@ -1,11 +1,10 @@
-package org.example.ex10.object;
+package org.example.ex11.object;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.ex10.BubbleFrame;
-import org.example.ex10.Movable;
-import org.example.ex10.constant.PlayerWay;
-import org.example.ex10.service.BackgroundBubbleService;
+import org.example.ex11.BubbleFrame;
+import org.example.ex11.Movable;
+import org.example.ex11.service.BackgroundBubbleService;
 
 import javax.swing.*;
 

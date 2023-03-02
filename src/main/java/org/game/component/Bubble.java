@@ -1,11 +1,10 @@
-package org.example.ex10.object;
+package org.game.component;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.ex10.BubbleFrame;
-import org.example.ex10.Movable;
-import org.example.ex10.constant.PlayerWay;
-import org.example.ex10.service.BackgroundBubbleService;
+import org.game.BubbleFrame;
+import org.game.Movable;
+import org.game.service.BackgroundBubbleService;
 
 import javax.swing.*;
 
@@ -15,6 +14,7 @@ public class Bubble extends JLabel implements Movable {
     // 플레이어 의존성 컴포지션
     private BubbleFrame mContext;
     private Player player;
+    private Enemy enemy;
     private BackgroundBubbleService backgroundBubbleService;
 
     // 위치 상태
@@ -36,6 +36,7 @@ public class Bubble extends JLabel implements Movable {
     public Bubble(BubbleFrame mContext) {
         this.mContext = mContext;
         this.player = mContext.getPlayer();
+        this.enemy = mContext.getEnemy();
         initObject();
         initSetting(player);
     }
@@ -65,13 +66,22 @@ public class Bubble extends JLabel implements Movable {
     @Override
     public void left() {
         left = true;
-        for(int i=0; i<400; i++) {
+        for (int i = 0; i < 400; i++) {
             x--;
             setLocation(x, y);
 
-            if(backgroundBubbleService.leftWall()) {
+            if (backgroundBubbleService.leftWall()) {
                 left = false;
                 break;
+            }
+
+            // 적과 물방울의 충돌 계산
+            if ((Math.abs(x - enemy.getX()) < 10)
+                    && (0 < Math.abs(y - enemy.getY()) && Math.abs(y - enemy.getY()) < 50)) {
+                if (enemy.getState() == 0) {
+                    attack();
+                    break;
+                }
             }
 
             try {
@@ -86,13 +96,22 @@ public class Bubble extends JLabel implements Movable {
     @Override
     public void right() {
         right = true;
-        for(int i=0; i<400; i++) {
+        for (int i = 0; i < 400; i++) {
             x++;
             setLocation(x, y);
 
-            if(backgroundBubbleService.rightWall()) {
+            if (backgroundBubbleService.rightWall()) {
                 right = false;
                 break;
+            }
+
+            // 적과 물방울의 충돌 계산
+            if ((Math.abs(x - enemy.getX()) < 10)
+                    && (0 < Math.abs(y - enemy.getY()) && Math.abs(y - enemy.getY()) < 50)) {
+                if (enemy.getState() == 0) {
+                    attack();
+                    break;
+                }
             }
 
             try {
@@ -111,18 +130,33 @@ public class Bubble extends JLabel implements Movable {
             y--;
             setLocation(x, y);
 
-            if(backgroundBubbleService.topWall()) {
+            if (backgroundBubbleService.topWall()) {
                 up = false;
                 break;
             }
 
             try {
-                Thread.sleep(1);
+                if (state == 0) { // 기본 물방울
+                    Thread.sleep(1);
+                } else { // 적을 가둔 물방울
+                    Thread.sleep(10);
+                }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
-        clearBubble(); // 천장에 버블이 도착하고 나서 3초 후에 메모리에서 소멸
+        if (state == 0) {
+            clearBubble(); // 천장에 버블이 도착하고 나서 3초 후에 메모리에서 소멸
+        }
+    }
+
+    @Override
+    public void attack() {
+        state = 1;
+        enemy.setState(1);
+        setIcon(bubbled);
+        mContext.remove(enemy); // 메모리에서 사라지게 한다 (가비지 컬렉션 -> 즉시 발동하지 않음)
+        mContext.repaint(); // 화면 갱신
     }
 
     // 행위 -> clear(동사) -> bubble (목적어)
@@ -136,5 +170,19 @@ public class Bubble extends JLabel implements Movable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void clearBubbled() {
+        new Thread(() -> {
+            try {
+                up = false;
+                setIcon(bomb);
+                Thread.sleep(1000);
+                mContext.remove(this);
+                mContext.repaint();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }

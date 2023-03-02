@@ -1,13 +1,15 @@
-package org.example.ex10.object;
+package org.example.ex14.object;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.ex10.BubbleFrame;
-import org.example.ex10.Movable;
-import org.example.ex10.constant.PlayerWay;
-import org.example.ex10.service.BackgroundPlayerService;
+import org.example.ex14.BubbleFrame;
+import org.example.ex14.Movable;
+import org.example.ex14.constant.PlayerWay;
+import org.example.ex14.service.BackgroundPlayerService;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 // class Player -> new 가는한 애들!! 게임에 존재할 수 있음(추상메소드를 가질 수 없다.)
 @Getter
@@ -15,6 +17,7 @@ import javax.swing.*;
 public class Player extends JLabel implements Movable {
     // 의존선 컴포지션
     private BubbleFrame mContext;
+    private List<Bubble> bubbleList;
 
     // 위치 상태
     private int x;
@@ -49,6 +52,7 @@ public class Player extends JLabel implements Movable {
     private void initObject() {
         playerR = new ImageIcon("src/main/resources/image/playerR.png");
         playerL = new ImageIcon("src/main/resources/image/playerL.png");
+        bubbleList = new ArrayList<>();
     }
 
     private void initSetting() {
@@ -154,6 +158,7 @@ public class Player extends JLabel implements Movable {
         new Thread(() -> {
             Bubble bubble = new Bubble(mContext);
             mContext.add(bubble);
+            bubbleList.add(bubble);
             if(playerWay == PlayerWay.LEFT) {
                 bubble.left();
             } else  {

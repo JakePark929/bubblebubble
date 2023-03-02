@@ -9,7 +9,8 @@ public interface Movable {
     public abstract void left();
     public abstract void right();
     public abstract void up();
-    default public void down() { }; // 자바 높은 버전 부터 나온 문법
+    default public void down() { };
+    default public void attack() { };
 
 //    public abstract void down();
 }

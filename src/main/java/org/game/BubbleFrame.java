@@ -1,9 +1,10 @@
-package org.example.ex10;
+package org.game;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.ex10.object.Bubble;
-import org.example.ex10.object.Player;
+import org.game.component.Enemy;
+import org.game.component.Player;
+import org.game.music.BGM;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,8 @@ public class BubbleFrame extends JFrame {
     private BubbleFrame mContext = this;
     private JLabel backgroundMap;
     private Player player;
+//    private List<Enemy> enemy;
+    private Enemy enemy;
 
     public BubbleFrame() throws HeadlessException {
         initObject();
@@ -33,6 +36,9 @@ public class BubbleFrame extends JFrame {
         setContentPane(backgroundMap); // pane 없이 바로 label 생성
         player = new Player(mContext);
         add(player);
+        enemy = new Enemy(mContext);
+        add(enemy);
+        new BGM();
     }
 
     private void initSetting() {
